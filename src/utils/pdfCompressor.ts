@@ -168,8 +168,8 @@ export async function compressPDF(
 
   const pdfBytes = await outputPdfDoc.save({ useObjectStreams: true });
   
-  // Create a clean ArrayBuffer copy to satisfy TypeScript's BlobPart definition
-  const cleanBuffer = pdfBytes.buffer.slice(pdfBytes.byteOffset, pdfBytes.byteOffset + pdfBytes.byteLength);
+  // Explicit cast as ArrayBuffer to pass strict TypeScript BlobPart checks
+  const cleanBuffer = pdfBytes.buffer.slice(pdfBytes.byteOffset, pdfBytes.byteOffset + pdfBytes.byteLength) as ArrayBuffer;
   const compressedBlob = new Blob([cleanBuffer], { type: 'application/pdf' });
 
   return {
@@ -178,5 +178,5 @@ export async function compressPDF(
     compressedSizeBytes: compressedBlob.size,
     fileName: `paperlog_optimized_${file.name}`
   };
-}
+        }
 
