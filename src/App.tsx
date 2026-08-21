@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Upload, FileText, CheckCircle2, ArrowRight, Download, RefreshCw, Layers, ShieldCheck, Sparkles, Zap, FileCheck, Lock } from 'lucide-react';
+import { Upload, FileText, CheckCircle2, ArrowRight, Download, RefreshCw, Layers, ShieldCheck, Sparkles, Zap, Lock } from 'lucide-react';
 import * as pdfjsLib from 'pdfjs-dist';
 import { analyzePDF, compressPDF, formatBytes } from './utils/pdfCompressor';
 import { PDFAnalysis, CompressionTarget, CompressionProgress, CompressionResult } from './types';
@@ -33,7 +33,7 @@ export default function App() {
       await page.render({ canvasContext: ctx, viewport }).promise;
       setPreviewUrl(canvas.toDataURL());
     } catch {
-      // Ignore preview errors
+      // preview fallback
     }
   };
 
@@ -67,7 +67,7 @@ export default function App() {
       target = {
         id: 'custom',
         label: `Custom (${customRatio}%)`,
-        description: 'User-configured custom compression ratio',
+        description: 'User-configured custom ratio',
         targetSizeBytes: Math.max(file.size * (1 - customRatio / 100), 20000),
         reductionPercentage: customRatio,
         scaleFactor: Math.max(0.9, 1.8 - (customRatio / 100) * 0.9),
@@ -111,11 +111,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-between p-4 sm:p-8 relative">
-      <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none opacity-50" />
-      
-      {/* Header */}
-      <header className="w-full max-w-5xl mx-auto flex items-center justify-between py-4 border-b border-slate-200 z-10">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-between p-4 sm:p-8">
+      <header className="w-full max-w-5xl mx-auto flex items-center justify-between py-4 border-b border-slate-200">
         <div className="flex items-center space-x-3">
           <div className="bg-indigo-600 p-2.5 rounded-2xl shadow-md text-white">
             <Layers className="w-5 h-5" />
@@ -134,15 +131,13 @@ export default function App() {
         </div>
       </header>
 
-      {/* Main Container */}
-      <main className="w-full max-w-5xl mx-auto flex-1 flex flex-col justify-center my-6 z-10">
+      <main className="w-full max-w-5xl mx-auto flex-1 flex flex-col justify-center my-6">
         {errorMessage && (
           <div className="mb-4 p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs font-medium">
             {errorMessage}
           </div>
         )}
 
-        {/* View 1: Upload */}
         {!file && (
           <div
             onDrop={(e) => { e.preventDefault(); if (e.dataTransfer.files[0]) handleFileChange(e.dataTransfer.files[0]); }}
@@ -160,14 +155,13 @@ export default function App() {
               <span className="text-xs bg-slate-100 text-slate-600 font-medium px-3 py-1.5 rounded-xl border border-slate-200 flex items-center gap-1">
                 <Zap className="w-3.5 h-3.5 text-amber-500" /> In-Memory Processing
               </span>
-              <span className="text-xs bg-slate-100 text-slate-600 font-medium px-3 py-1.5 rounded-xl border border-slate-200 flex items-center gap-1">
-                <FileCheck className="w-3.5 h-3.5 text-indigo-500" /> All PDF Formats
+              <span className="text-xs bg-slate-100 text-slate-600 font-medium px-3 py-1.5 rounded-xl border border-slate-200">
+                100% Client-Side
               </span>
             </div>
           </div>
         )}
 
-        {/* View 2: Controls */}
         {file && !result && (
           <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xl">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-5 border-b border-slate-100 gap-4">
@@ -258,7 +252,6 @@ export default function App() {
           </div>
         )}
 
-        {/* View 3: Result */}
         {result && (
           <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xl">
             <div className="flex items-center space-x-2 text-emerald-600 mb-5">
@@ -294,8 +287,7 @@ export default function App() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="w-full max-w-5xl mx-auto flex items-center justify-between text-xs text-slate-400 py-4 border-t border-slate-200 z-10">
+      <footer className="w-full max-w-5xl mx-auto flex items-center justify-between text-xs text-slate-400 py-4 border-t border-slate-200">
         <span>Paperlog Engine • In-Browser Architecture</span>
         <span className="flex items-center gap-1 text-slate-500 font-medium">
           <ShieldCheck className="w-4 h-4 text-emerald-600" /> Private & Local
@@ -303,4 +295,4 @@ export default function App() {
       </footer>
     </div>
   );
-                      }
+            }
